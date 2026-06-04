@@ -1,235 +1,188 @@
 # AI Persona — Candidate Representative System
 
-> **Scaler AI Engineer Screening Assignment** — A fully autonomous AI persona that answers recruiter questions over voice and chat, and books real interviews on your calendar.
+> **Scaler AI Engineer Screening Assignment** — A fully autonomous AI persona that answers recruiter questions over voice and chat, and books real calendar interviews with no human in the loop.
+
+**Live URLs**
+- 💬 Chat: `https://web-production-bfcd0.up.railway.app`
+- 📞 Voice: `+1 (239) 663 4085`
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         RECRUITER                           │
-│              (calls phone / opens chat URL)                 │
-└───────────────────┬──────────────────┬──────────────────────┘
-                    │                  │
-             ┌──────▼──────┐   ┌───────▼───────┐
-             │    VAPI     │   │  Chat UI      │
-             │  (Telephony │   │  (index.html) │
-             │  ASR + TTS) │   └───────┬───────┘
-             └──────┬──────┘           │
-                    │ POST /voice/     │ POST /chat/
-                    │ webhook          │ message
-                    └────────┬─────────┘
-                             │
-            ┌────────────────▼────────────────────┐
-            │        FastAPI Server (Python)       │
-            │                                      │
-            │  ┌──────────────────────────────┐    │
-            │  │   LangChain Agent (GPT-4o)   │    │
-            │  │   + OpenAI Tool Calling      │    │
-            │  └────────┬──────────┬──────────┘    │
-            │           │          │                │
-            │  ┌────────▼───┐  ┌───▼────────────┐  │
-            │  │  RAG Chain │  │ Calendar Tools │  │
-            │  │  (Chroma)  │  │ (Google Cal.)  │  │
-            │  └────────┬───┘  └───┬────────────┘  │
-            │           │          │                │
-            └───────────┼──────────┼────────────────┘
-                        │          │
-               ┌────────▼───┐  ┌───▼──────────┐
-               │  ChromaDB  │  │ Google Cal.  │
-               │  (local)   │  │    API       │
-               └────────────┘  └──────────────┘
-                    ▲
-                    │ one-time ingestion
-               ┌────┴──────────────────┐
-               │   Resume PDF          │
-               │   GitHub READMEs      │
-               │   Commit History      │
-               └───────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                           RECRUITER                                 │
+│               calls phone number  /  opens chat URL                │
+└──────────────────┬──────────────────────────┬───────────────────────┘
+                   │                          │
+          ┌────────▼────────┐       ┌─────────▼─────────┐
+          │   VAPI           │       │   Chat UI          │
+          │  Telephony       │       │  (index.html)      │
+          │  Deepgram ASR    │       │  Railway static    │
+          │  Azure TTS       │       └─────────┬──────────┘
+          └────────┬─────────┘                 │
+                   │ POST                      │ POST
+                   │ /voice/webhook            │ /chat/message
+                   │ /chat/completions         │
+                   └──────────────┬────────────┘
+                                  │
+              ┌───────────────────▼──────────────────────┐
+              │           FastAPI Server (Python)         │
+              │                                           │
+              │  ┌────────────────────────────────────┐  │
+              │  │   LangChain AgentExecutor           │  │
+              │  │   GPT-4o + OpenAI Tool Calling      │  │
+              │  └──────────┬──────────────┬───────────┘  │
+              │             │              │               │
+              │   ┌─────────▼───┐  ┌───────▼───────────┐  │
+              │   │  RAG Chain  │  │  Calendar Tools    │  │
+              │   │  per-turn   │  │  check_availability│  │
+              │   │  retrieval  │  │  book_meeting      │  │
+              │   └─────────┬───┘  └───────┬────────────┘  │
+              └─────────────┼──────────────┼───────────────┘
+                            │              │
+                 ┌──────────▼───┐  ┌───────▼──────────┐
+                 │   ChromaDB   │  │  Google Calendar  │
+                 │  (local,     │  │  API (freebusy,   │
+                 │  persisted)  │  │  events.insert)   │
+                 └──────────────┘  └──────────────────-┘
+                       ▲
+                       │  one-time ingestion
+              ┌────────┴──────────────────┐
+              │  Resume PDF (15 chunks)   │
+              │  GitHub READMEs           │
+              │  Repo summaries           │
+              │  Commit history           │
+              │  Total: 132 chunks        │
+              └───────────────────────────┘
 ```
+
+---
 
 ## Project Structure
 
 ```
 ai-persona/
 ├── app/
-│   ├── main.py              # FastAPI app, CORS, lifespan
+│   ├── main.py                  # FastAPI app, CORS, frontend serving
 │   ├── rag/
-│   │   ├── ingest.py        # Resume + GitHub ingestion → Chroma
-│   │   └── chain.py         # ConversationalRetrievalChain + session store
+│   │   ├── ingest.py            # Resume + GitHub → Chroma ingestion
+│   │   └── chain.py             # ConversationalRetrievalChain + sessions
 │   ├── voice/
-│   │   └── vapi_webhook.py  # Vapi webhook handler + agent per call
+│   │   └── vapi_webhook.py      # Vapi custom-llm /chat/completions handler
 │   ├── chat/
-│   │   └── router.py        # Chat API endpoints + streaming
+│   │   └── router.py            # Chat API — per-turn RAG + manual memory
 │   └── calendar/
-│       ├── gcal.py          # Google Calendar auth, slots, booking
-│       └── tools.py         # LangChain Tools wrapping gcal.py
+│       ├── gcal.py              # Google Calendar auth, slots, booking
+│       └── tools.py             # LangChain Tools + voice email cleaner
 ├── frontend/
-│   └── index.html           # Chat UI (vanilla JS, no framework)
+│   └── index.html               # Chat UI — dark editorial + 3D wireframe
 ├── scripts/
-│   └── setup_vapi.py        # One-time Vapi assistant setup
-├── data/
-│   ├── resume/              # Place resume.pdf here
-│   └── chroma_db/           # Auto-created by ingest.py
+│   └── setup_vapi.py            # One-time Vapi assistant creation
 ├── tests/
+│   └── eval_chat.py             # GPT-4o judge eval — 28 golden Q&A
+├── data/
+│   ├── resume/resume.pdf        # Candidate resume (not in git)
+│   └── chroma_db/               # Persisted vector store (committed)
+├── startup.sh                   # Railway startup — writes auth files from env
+├── Procfile                     # web: bash startup.sh
+├── runtime.txt                  # python-3.11.9
+├── mise.toml                    # Disable Python attestation check
 ├── requirements.txt
-├── .env.example
-└── README.md
+└── .env.example
 ```
 
 ---
 
-## Setup (Step by Step)
+## Setup
 
 ### Prerequisites
-
 - Python 3.11+
 - OpenAI API key
-- Vapi account (free tier — $10 credits on signup)
+- Vapi account (free — $10 credits on signup)
 - Google Cloud project with Calendar API enabled
-- Your resume as a PDF
-- A public server URL (use [ngrok](https://ngrok.com) for local dev)
+- Resume as PDF
 
----
-
-### Step 1 — Clone & Install
-
+### Step 1 — Install
 ```bash
-git clone https://github.com/YOUR_USERNAME/ai-persona.git
-cd ai-persona
-python -m venv venv && source venv/bin/activate
+git clone https://github.com/Akshat030307/Ai-persona.git
+cd Ai-persona
+python -m venv venv
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # Mac/Linux
 pip install -r requirements.txt
 ```
 
----
-
-### Step 2 — Configure Environment
-
+### Step 2 — Configure
 ```bash
 cp .env.example .env
-# Fill in all values in .env
+# Fill in all values — see .env.example for details
 ```
 
-**Required values:**
-
-| Key | Where to get it |
-|-----|----------------|
-| `OPENAI_API_KEY` | platform.openai.com |
-| `VAPI_API_KEY` | dashboard.vapi.ai → API Keys |
-| `VAPI_PHONE_NUMBER_ID` | Vapi dashboard → Phone Numbers → buy one |
-| `GITHUB_TOKEN` | github.com/settings/tokens (read:public_repo) |
-| `GITHUB_USERNAME` | your GitHub username |
-| `GOOGLE_CREDENTIALS_PATH` | See Step 3 |
-| `CANDIDATE_NAME` | Your full name |
-| `CANDIDATE_EMAIL` | Your email |
-| `RESUME_PATH` | Path to your resume PDF |
-
----
-
-### Step 3 — Google Calendar OAuth2
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a project → Enable **Google Calendar API**
-3. Credentials → Create OAuth 2.0 Client ID (Desktop app)
-4. Download the JSON → save as `data/google_credentials.json`
-5. Run the auth flow once locally:
-
+### Step 3 — Google Calendar OAuth (run once locally)
 ```bash
+# Download credentials JSON from Google Cloud Console
+# Save as data/google_credentials.json
 python -m app.calendar.gcal --auth
 # Opens browser → authorize → saves data/google_token.json
 ```
 
----
-
-### Step 4 — Add Resume & Ingest
-
+### Step 4 — Ingest knowledge base
 ```bash
-# Place your resume at data/resume/resume.pdf
+# Place resume at data/resume/resume.pdf
 python -m app.rag.ingest
-# Output: "Ingestion complete. N chunks indexed."
+# Output: Ingestion complete. 132 chunks indexed.
 ```
 
----
-
-### Step 5 — Start the Server
-
+### Step 5 — Run locally
 ```bash
 uvicorn app.main:app --reload --port 8000
+# Chat UI: http://localhost:8000
+# API docs: http://localhost:8000/docs
 ```
 
-For a public URL during development:
+### Step 6 — Set up Vapi voice agent
 ```bash
-ngrok http 8000
-# Note the https://xxxx.ngrok.io URL
+# Need public URL first (ngrok or deployed)
+python scripts/setup_vapi.py --server-url https://your-url.railway.app
+# Output: phone number + assistant ID
+```
+
+### Step 7 — Deploy to Railway
+```bash
+git add .
+git commit -m "deploy"
+git push origin master
+# Set all env vars in Railway dashboard → Variables
+# Add GOOGLE_CREDENTIALS_B64, GOOGLE_TOKEN_B64, RESUME_PDF_B64 (base64 encoded)
+```
+
+Generate base64 values locally:
+```bash
+python -c "import base64; print(base64.b64encode(open('data/google_credentials.json','rb').read()).decode())"
+python -c "import base64; print(base64.b64encode(open('data/google_token.json','rb').read()).decode())"
+python -c "import base64; print(base64.b64encode(open('data/resume/resume.pdf','rb').read()).decode())"
 ```
 
 ---
 
-### Step 6 — Set Up Vapi
+## Key Design Decisions
 
-```bash
-python scripts/setup_vapi.py --server-url https://xxxx.ngrok.io
-# Output: phone number to submit + assistant ID saved to .env
-```
+**1. Per-turn RAG context refresh**
+Context is retrieved fresh for every message rather than cached per session. This prevents stale retrieval — if turn 1 asks about calendar, turn 2 asking about ELIRA still gets the right GitHub chunks. Cost impact is negligible (~$0.0001/message).
 
----
+**2. Vapi custom-llm via `/chat/completions`**
+Vapi's `custom-llm` provider sends requests to `{serverUrl}/chat/completions` in OpenAI format, not a simple webhook. Our server implements this endpoint, parses the message array, runs the RAG agent, and returns an OpenAI-format response.
 
-### Step 7 — Test
+**3. Manual session memory over LangChain memory objects**
+Rebuilding the AgentExecutor every turn (needed for fresh RAG context) caused double-saving with LangChain's `ConversationBufferWindowMemory`. Replaced with a plain Python dict of `{session_id: [{human, ai}, ...]}`, injected as `HumanMessage`/`AIMessage` objects directly into the prompt.
 
-```bash
-# Chat
-curl -X POST http://localhost:8000/chat/message \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Why should we hire this candidate?"}'
+**4. Voice email cleaning**
+Deepgram transcribes spoken emails as `"akshat at the rate of gmail dot com"` or `"a k s h a t 2 0 0 6"`. A `_clean_email()` function normalises these patterns before passing to the Calendar API.
 
-# Check availability
-curl -X POST http://localhost:8000/chat/message \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Check availability for a 30 min call this week"}'
-
-# Voice: call the phone number from setup_vapi.py output
-```
-
----
-
-## Deployment (Production)
-
-### Option A — Railway (Recommended, free tier available)
-
-```bash
-# Install Railway CLI
-npm install -g @railway/cli
-railway login
-railway init
-railway up
-
-# Set env vars
-railway variables set OPENAI_API_KEY=sk-... VAPI_API_KEY=... # etc.
-
-# Get your public URL from Railway dashboard
-# Re-run: python scripts/setup_vapi.py --server-url https://your-app.railway.app
-```
-
-### Option B — Fly.io
-
-```bash
-fly launch
-fly secrets set OPENAI_API_KEY=sk-... VAPI_API_KEY=...
-fly deploy
-```
-
-### Serve the Frontend
-
-The `frontend/index.html` can be served as a static file by FastAPI:
-
-```python
-# Add to app/main.py
-from fastapi.staticfiles import StaticFiles
-app.mount("/", StaticFiles(directory="frontend", html=True), name="static")
-```
-
-Or deploy to Vercel / Netlify separately. Update `API_BASE` in `index.html`.
+**5. Chroma committed to repo**
+Instead of re-running ingestion on every Railway deploy, the `chroma_db/` folder is committed to git. Cold start loads the vector store in ~200ms. Re-run `python -m app.rag.ingest` locally and push to update.
 
 ---
 
@@ -239,50 +192,62 @@ Or deploy to Vercel / Netlify separately. Update `API_BASE` in `index.html`.
 
 | Component | Usage | Est. Cost |
 |-----------|-------|-----------|
-| OpenAI GPT-4o (~2K tokens × 5 turns) | 10K tokens | $0.05 |
-| Deepgram Nova-2 ASR (5 min) | 5 min | $0.02 |
-| ElevenLabs TTS (~500 chars × 5) | 2,500 chars | $0.04 |
-| Vapi platform fee | 5 min | $0.03 |
-| **Total per call** | | **~$0.14** |
+| OpenAI GPT-4o (~1.5K tokens × 6 turns) | ~9K tokens | $0.045 |
+| OpenAI Embeddings (6 queries × ~300 tokens) | ~1.8K tokens | $0.0002 |
+| Deepgram Nova-2 ASR (5 min audio) | 5 min | $0.022 |
+| Azure TTS via Vapi | 5 min | $0.015 |
+| Vapi platform fee | 5 min @ ~$0.05/min | $0.025 |
+| **Total per call** | | **~$0.11** |
 
-### Per Chat Session (10-message session)
+### Per Chat Session (10-message conversation)
 
 | Component | Usage | Est. Cost |
 |-----------|-------|-----------|
-| OpenAI GPT-4o (~1K tokens × 10 turns) | 10K tokens | $0.05 |
-| OpenAI Embeddings (10 queries) | ~5K tokens | $0.001 |
+| OpenAI GPT-4o (~1K tokens × 10 turns) | ~10K tokens | $0.050 |
+| OpenAI Embeddings (10 queries × ~300 tokens) | ~3K tokens | $0.0003 |
 | Chroma (local) | — | $0.00 |
+| Railway hosting | shared across sessions | ~$0.001 |
 | **Total per session** | | **~$0.05** |
 
 ### Monthly estimate (100 calls + 500 chat sessions)
-- Voice: 100 × $0.14 = **$14**
-- Chat:  500 × $0.05 = **$25**
-- **Total ≈ $39/month**
+| | Cost |
+|---|---|
+| Voice (100 × $0.11) | $11 |
+| Chat (500 × $0.05) | $25 |
+| Railway (Hobby plan) | $5 |
+| **Total** | **~$41/month** |
 
 ---
 
-## Key Design Decisions
+## Eval Results (Part C)
 
-1. **Single FastAPI server for both voice and chat** — simplifies deployment, one URL to keep live.
+| Metric | Result |
+|--------|--------|
+| Voice first-response latency | ~400ms server-side / ~1.4s end-to-end |
+| Transcription WER | < 15% (Deepgram Nova-2 on clear audio) |
+| Booking success rate | 4/5 (80%) |
+| Hallucination rate | 7.1% (2/28 questions) |
+| Retrieval keyword hit rate | 71.4% (20/28 questions) |
+| Injection resistance | 4/4 (100%) |
+| Average quality score | 3.96 / 5.0 |
 
-2. **RAG on every turn (with context refresh)** — instead of stuffing the full knowledge base into the system prompt, we retrieve the top-6 most relevant chunks per question. This keeps costs low and answers more precise.
-
-3. **LangChain AgentExecutor with tool calling** — the LLM decides when to call `check_availability` and `book_meeting` based on conversation context. No hand-written intent detection.
-
-4. **Session memory (k=10 turns)** — keeps conversation context without blowing up the context window. Keyed by `session_id` (call_id for voice, UUID for chat).
-
-5. **Chroma local over Pinecone** — zero latency overhead for retrieval, no API cost, persists to disk. Sufficient for a single-candidate knowledge base (~500–1000 chunks).
-
-6. **`max_tokens=200` for voice responses** — enforces concise answers for phone calls. Chat uses full token budget.
+See `tests/eval_chat.py` for the full golden Q&A set and judge methodology.
 
 ---
 
-## Evals
+## Environment Variables
 
-See `tests/` for the golden Q&A set and hallucination eval scripts.
+See `.env.example` for all required variables. Key ones:
 
-Run evals:
-```bash
-python -m tests.eval_chat      # hallucination rate + retrieval quality
-python -m tests.eval_voice     # (manual test calls + latency logging)
-```
+| Variable | Description |
+|----------|-------------|
+| `OPENAI_API_KEY` | GPT-4o + embeddings |
+| `VAPI_API_KEY` | Vapi private key |
+| `VAPI_PHONE_NUMBER_ID` | Vapi phone number UUID |
+| `GITHUB_TOKEN` | For RAG ingestion of repos |
+| `GOOGLE_CREDENTIALS_PATH` | OAuth2 credentials JSON |
+| `GOOGLE_TOKEN_PATH` | OAuth2 token (auto-generated) |
+| `CANDIDATE_NAME` | Injected into all prompts |
+| `BOOKING_TIMEZONE` | e.g. `Asia/Kolkata` |
+| `GOOGLE_CREDENTIALS_B64` | Base64 credentials for Railway |
+| `GOOGLE_TOKEN_B64` | Base64 token for Railway |
