@@ -3,27 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Persona — Interview Assistant</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <title>Akshat Chowdhary — AI Interview Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #0C0F1A;
-      --surface:   #131729;
-      --surface2:  #1A1F35;
-      --border:    #252B45;
-      --accent:    #4F7EFF;
-      --accent2:   #7C3AED;
-      --text:      #E2E8F0;
-      --muted:     #64748B;
-      --success:   #10B981;
-      --mono:      'DM Mono', monospace;
-      --sans:      'Syne', sans-serif;
-      --radius:    12px;
+      --bg:      #111008;
+      --bg2:     #1A1810;
+      --bg3:     #211F14;
+      --yellow:  #E8C84A;
+      --yellow2: #F5D96A;
+      --text:    #EDE8D8;
+      --muted:   #8A8470;
+      --border:  #2A2820;
+      --border2: #3A3828;
+      --success: #5DBE8A;
+      --display: 'Bebas Neue', sans-serif;
+      --mono:    'DM Mono', monospace;
+      --sans:    'Inter', sans-serif;
     }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -38,464 +36,605 @@
     header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 16px 24px;
+      justify-content: space-between;
+      padding: 0 28px;
+      height: 52px;
       border-bottom: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--bg);
       flex-shrink: 0;
+      position: relative;
+      z-index: 10;
     }
-
-    .avatar {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .logo-mark {
+      width: 28px; height: 28px;
+      background: var(--yellow);
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 800; color: #fff;
+      font-family: var(--display);
+      font-size: 15px;
+      color: var(--bg);
       flex-shrink: 0;
     }
-
-    .header-info h1 {
-      font-size: 16px; font-weight: 700; letter-spacing: -0.02em;
-    }
-
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--mono); font-size: 11px; color: var(--success);
-    }
-
-    .status-pill::before {
-      content: '';
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--success);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.4; }
-    }
-
-    .phone-badge {
-      margin-left: auto;
-      display: flex; align-items: center; gap: 8px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px 14px;
+    .header-name {
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .header-divider { width: 1px; height: 16px; background: var(--border2); }
+    .status-dot {
+      display: flex; align-items: center; gap: 7px;
+      font-family: var(--mono);
+      font-size: 10px;
       color: var(--muted);
+      letter-spacing: 0.08em;
     }
-
-    .phone-badge span { color: var(--text); font-weight: 500; }
-
-    /* ── Messages area ── */
-    #messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      scroll-behavior: smooth;
+    .status-dot::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2.5s infinite;
     }
-
-    #messages::-webkit-scrollbar { width: 4px; }
-    #messages::-webkit-scrollbar-track { background: transparent; }
-    #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-    .msg {
-      max-width: 720px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      animation: fadeUp 0.2s ease;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .msg.user  { align-self: flex-end; align-items: flex-end; }
-    .msg.bot   { align-self: flex-start; align-items: flex-start; }
-
-    .msg-label {
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .phone-tag {
       font-family: var(--mono);
       font-size: 10px;
       color: var(--muted);
       letter-spacing: 0.06em;
+      border: 1px solid var(--border2);
+      padding: 4px 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .phone-tag span { color: var(--yellow); }
+
+    /* ── Messages ── */
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 28px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      scroll-behavior: smooth;
+      position: relative;
+      z-index: 2;
+    }
+    #messages::-webkit-scrollbar { width: 3px; }
+    #messages::-webkit-scrollbar-thumb { background: var(--border2); }
+
+    /* ── Empty state with canvas ── */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      gap: 0;
+      position: relative;
+    }
+    .empty-text-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 1;
+      z-index: 2;
+    }
+    .empty-index {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--yellow);
+      opacity: 0.6;
+      margin-bottom: 14px;
+    }
+    .empty-display {
+      font-family: var(--display);
+      font-size: clamp(48px, 6.5vw, 82px);
+      letter-spacing: 0.03em;
+      line-height: 0.92;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+    .empty-display em { color: var(--yellow); font-style: normal; }
+    .empty-sub {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      margin-bottom: 2px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+    .empty-line {
+      width: 36px; height: 1px;
+      background: var(--yellow);
+      opacity: 0.4;
+      margin-bottom: 28px;
+    }
+    .empty-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .empty-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      padding: 4px 10px;
     }
 
+    /* ── 3D Canvas ── */
+    .canvas-col {
+      width: 340px;
+      height: 340px;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #hero-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Messages ── */
+    .msg {
+      display: flex; flex-direction: column; gap: 5px;
+      max-width: 680px;
+      animation: slideUp 0.18s ease;
+    }
+    @keyframes slideUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .msg.user  { align-self: flex-end; align-items: flex-end; }
+    .msg.bot   { align-self: flex-start; align-items: flex-start; }
+    .msg-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .msg.user .msg-label { color: var(--yellow); opacity: 0.7; }
     .bubble {
       padding: 12px 16px;
-      border-radius: var(--radius);
-      font-size: 14px;
-      line-height: 1.65;
-      max-width: 100%;
+      font-size: 13.5px;
+      line-height: 1.7;
+      font-weight: 300;
     }
-
     .msg.user .bubble {
-      background: var(--accent);
-      color: #fff;
-      border-radius: var(--radius) var(--radius) 2px var(--radius);
+      background: var(--yellow);
+      color: var(--bg);
+      font-weight: 400;
+      clip-path: polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%);
     }
-
     .msg.bot .bubble {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius) var(--radius) var(--radius) 2px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-left: 2px solid var(--yellow);
+      color: var(--text);
     }
-
+    .bubble strong { font-weight: 500; color: var(--yellow2); }
     .bubble code {
       font-family: var(--mono);
-      background: rgba(79,126,255,0.12);
-      padding: 2px 6px;
-      border-radius: 4px;
       font-size: 12px;
+      background: var(--bg2);
+      padding: 1px 5px;
+      color: var(--yellow2);
     }
-
-    .bubble pre {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 8px;
-      overflow-x: auto;
+    .typing-wrap { display:flex;align-items:center;gap:6px;padding:14px 16px; }
+    .typing-wrap span {
+      width:5px;height:5px;border-radius:50%;
+      background:var(--yellow);opacity:.4;
+      animation:blink 1.4s infinite;
     }
-
-    .bubble pre code {
-      background: none;
-      padding: 0;
-    }
-
-    /* ── Typing indicator ── */
-    .typing-dots {
-      display: flex; gap: 4px; align-items: center;
-      padding: 14px 16px;
-    }
-
-    .typing-dots span {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--muted);
-      animation: blink 1.2s infinite;
-    }
-
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes blink {
-      0%, 80%, 100% { opacity: 0.2; transform: scale(0.85); }
-      40%           { opacity: 1;   transform: scale(1); }
-    }
+    .typing-wrap span:nth-child(2){animation-delay:.2s}
+    .typing-wrap span:nth-child(3){animation-delay:.4s}
+    @keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
 
     /* ── Quick prompts ── */
     .quick-prompts {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      padding: 0 24px 16px;
+      display: flex; flex-wrap: wrap; gap: 7px;
+      padding: 0 28px 14px;
+      position: relative; z-index: 2;
     }
-
     .qp-btn {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
+      background: transparent;
+      border: 1px solid var(--border2);
       color: var(--muted);
-      font-family: var(--sans);
-      font-size: 12px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       padding: 6px 14px;
       cursor: pointer;
       transition: all 0.15s;
     }
+    .qp-btn:hover { border-color:var(--yellow);color:var(--yellow);background:rgba(232,200,74,.05); }
 
-    .qp-btn:hover {
-      border-color: var(--accent);
-      color: var(--text);
-    }
-
-    /* ── Input area ── */
+    /* ── Input ── */
     .input-area {
-      padding: 16px 24px 20px;
+      padding: 14px 28px 20px;
       border-top: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--bg);
       flex-shrink: 0;
+      position: relative; z-index: 10;
     }
-
-    .input-row {
-      display: flex; gap: 10px; align-items: flex-end;
-    }
-
-    textarea {
+    .input-row { display:flex;gap:10px;align-items:flex-end; }
+    .input-wrap {
       flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-family: var(--sans);
-      font-size: 14px;
-      padding: 12px 16px;
-      resize: none;
-      min-height: 44px;
-      max-height: 140px;
-      outline: none;
+      border: 1px solid var(--border2);
+      background: var(--bg2);
+      display: flex; align-items: flex-end;
       transition: border-color 0.15s;
-      line-height: 1.5;
+      position: relative;
     }
-
-    textarea:focus { border-color: var(--accent); }
-    textarea::placeholder { color: var(--muted); }
-
+    .input-wrap:focus-within { border-color: var(--yellow); }
+    .input-corner {
+      position:absolute;bottom:-1px;right:-1px;
+      width:8px;height:8px;
+      border-right:1px solid var(--yellow);
+      border-bottom:1px solid var(--yellow);
+    }
+    textarea {
+      flex:1;background:transparent;border:none;
+      color:var(--text);font-family:var(--sans);
+      font-size:13.5px;font-weight:300;
+      padding:11px 14px;resize:none;
+      min-height:42px;max-height:130px;outline:none;line-height:1.6;
+    }
+    textarea::placeholder{color:var(--muted);font-size:12px;letter-spacing:.04em}
     #send-btn {
-      width: 44px; height: 44px;
-      border-radius: 10px;
-      background: var(--accent);
-      border: none;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      transition: opacity 0.15s, transform 0.1s;
+      width:42px;height:42px;
+      background:var(--yellow);border:none;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;transition:opacity .15s,transform .1s;
+      clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%);
     }
-
-    #send-btn:hover  { opacity: 0.9; }
-    #send-btn:active { transform: scale(0.95); }
-    #send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    #send-btn svg { fill: #fff; }
-
-    /* ── Empty state ── */
-    .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: var(--muted);
-      text-align: center;
-      padding: 40px;
-    }
-
-    .empty-state .big-icon {
-      font-size: 48px;
-      opacity: 0.4;
-    }
-
-    .empty-state h2 {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .empty-state p {
-      font-size: 13px;
-      max-width: 360px;
-      line-height: 1.6;
+    #send-btn:hover{opacity:.85}
+    #send-btn:active{transform:scale(.95)}
+    #send-btn:disabled{opacity:.3;cursor:not-allowed}
+    #send-btn svg{fill:var(--bg)}
+    .input-hint {
+      margin-top:7px;font-family:var(--mono);
+      font-size:9px;letter-spacing:.1em;
+      text-transform:uppercase;color:var(--muted);opacity:.5;
     }
   </style>
 </head>
 <body>
 
-<!-- ── Header ── -->
 <header>
-  <div class="avatar" id="avatar-initials">AI</div>
-  <div class="header-info">
-    <h1 id="persona-name">AI Interview Assistant</h1>
-    <div class="status-pill">Live · RAG-grounded</div>
+  <div class="header-left">
+    <div class="logo-mark">AC</div>
+    <div class="header-name" id="persona-name">Akshat Chowdhary</div>
+    <div class="header-divider"></div>
+    <div class="status-dot">Live · RAG grounded</div>
   </div>
-  <div class="phone-badge" id="phone-badge" style="display:none">
-    📞 <span id="phone-display"></span>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="phone-tag" id="phone-badge" style="display:none">
+      ☏ &nbsp;<span id="phone-display"></span>
+    </div>
   </div>
 </header>
 
-<!-- ── Messages ── -->
 <div id="messages">
   <div class="empty-state" id="empty-state">
-    <div class="big-icon">🤖</div>
-    <h2>Ask me anything about the candidate</h2>
-    <p>I'm grounded on their resume and GitHub repos. Ask about projects, skills, experience — or schedule an interview.</p>
+    <div class="empty-text-col">
+      <div class="empty-index">01 / AI INTERVIEW ASSISTANT</div>
+      <div class="empty-display">ASK ME<br>ANYTHING<br>ABOUT <em>AKSHAT</em></div>
+      <div class="empty-sub">RAG-grounded · Live calendar · Voice enabled</div>
+      <div class="empty-line"></div>
+      <div class="empty-tags">
+        <span class="empty-tag">LangChain</span>
+        <span class="empty-tag">FastAPI</span>
+        <span class="empty-tag">Voice AI</span>
+        <span class="empty-tag">RAG</span>
+        <span class="empty-tag">LLM Evals</span>
+      </div>
+    </div>
+    <div class="canvas-col">
+      <canvas id="hero-canvas"></canvas>
+    </div>
   </div>
 </div>
 
-<!-- ── Quick prompts ── -->
 <div class="quick-prompts" id="quick-prompts">
   <button class="qp-btn" onclick="sendQuick('Why should we hire you for this role?')">Why hire?</button>
-  <button class="qp-btn" onclick="sendQuick('Walk me through your most impactful GitHub project.')">Key project</button>
+  <button class="qp-btn" onclick="sendQuick('Walk me through the ELIRA project.')">ELIRA</button>
   <button class="qp-btn" onclick="sendQuick('What are your top technical skills?')">Tech skills</button>
-  <button class="qp-btn" onclick="sendQuick('Check your availability this week for a 30-min call.')">Book a call</button>
-  <button class="qp-btn" onclick="sendQuick('Tell me about your work experience.')">Experience</button>
+  <button class="qp-btn" onclick="sendQuick('Check availability for a 30-min call this week.')">Book a call</button>
+  <button class="qp-btn" onclick="sendQuick('Tell me about your internship at Zeepty.')">Zeepty internship</button>
+  <button class="qp-btn" onclick="sendQuick('What is the ASTRA voice AI project?')">ASTRA</button>
 </div>
 
-<!-- ── Input ── -->
 <div class="input-area">
   <div class="input-row">
-    <textarea
-      id="user-input"
-      placeholder="Ask about projects, skills, availability…"
-      rows="1"
-    ></textarea>
+    <div class="input-wrap">
+      <textarea id="user-input" placeholder="Ask about projects, skills, availability…" rows="1"></textarea>
+      <div class="input-corner"></div>
+    </div>
     <button id="send-btn" onclick="sendMessage()" aria-label="Send">
-      <svg width="18" height="18" viewBox="0 0 24 24">
-        <path d="M2 21L23 12 2 3v7l15 2-15 2v7z"/>
-      </svg>
+      <svg width="16" height="16" viewBox="0 0 24 24"><path d="M2 21L23 12 2 3v7l15 2-15 2v7z"/></svg>
     </button>
   </div>
+  <div class="input-hint">Enter to send · Shift+Enter for new line</div>
 </div>
 
 <script>
-  // ── Config — update these after deployment ──────────────────────────────────
-  const API_BASE    = window.location.origin;  // same-origin in prod
-  const CAND_NAME   = "Your Name";             // REPLACE with candidate name
-  const PHONE_NUM   = "+1 (555) 000-0000";     // REPLACE with Vapi phone number
+const API_BASE  = window.location.origin;
+const CAND_NAME = "Akshat Chowdhary";
+const PHONE_NUM = "+1 (239) 663 4085";
 
-  // ── State ───────────────────────────────────────────────────────────────────
-  let sessionId = null;
-  let isWaiting = false;
+let sessionId = null;
+let isWaiting = false;
 
-  // ── Init ────────────────────────────────────────────────────────────────────
-  document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("persona-name").textContent = `${CAND_NAME} · AI Assistant`;
-    document.getElementById("avatar-initials").textContent =
-      CAND_NAME.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+// ── 3D Wireframe Icosahedron ──────────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx    = canvas.getContext('2d');
+  const W = 340, H = 340;
+  canvas.width  = W;
+  canvas.height = H;
 
-    if (PHONE_NUM) {
-      document.getElementById("phone-display").textContent = PHONE_NUM;
-      document.getElementById("phone-badge").style.display = "flex";
-    }
+  const YELLOW  = '#E8C84A';
+  const YELLOW2 = 'rgba(232,200,74,0.18)';
+  const DIM     = 'rgba(232,200,74,0.06)';
 
-    const ta = document.getElementById("user-input");
-    ta.addEventListener("keydown", e => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-    ta.addEventListener("input", () => {
-      ta.style.height = "auto";
-      ta.style.height = Math.min(ta.scrollHeight, 140) + "px";
+  // Icosahedron vertices
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const vRaw = [
+    [-1, phi,0],[1,phi,0],[-1,-phi,0],[1,-phi,0],
+    [0,-1,phi],[0,1,phi],[0,-1,-phi],[0,1,-phi],
+    [phi,0,-1],[phi,0,1],[-phi,0,-1],[-phi,0,1]
+  ];
+  // Normalize
+  const vertices = vRaw.map(v => {
+    const len = Math.sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
+    return [v[0]/len, v[1]/len, v[2]/len];
+  });
+
+  const faces = [
+    [0,11,5],[0,5,1],[0,1,7],[0,7,10],[0,10,11],
+    [1,5,9],[5,11,4],[11,10,2],[10,7,6],[7,1,8],
+    [3,9,4],[3,4,2],[3,2,6],[3,6,8],[3,8,9],
+    [4,9,5],[2,4,11],[6,2,10],[8,6,7],[9,8,1]
+  ];
+
+  // Build unique edges
+  const edgeSet = new Set();
+  const edges = [];
+  faces.forEach(f => {
+    [[f[0],f[1]],[f[1],f[2]],[f[2],f[0]]].forEach(([a,b]) => {
+      const key = Math.min(a,b)+'-'+Math.max(a,b);
+      if (!edgeSet.has(key)) { edgeSet.add(key); edges.push([a,b]); }
     });
   });
 
-  // ── Markdown (minimal) ──────────────────────────────────────────────────────
-  function renderMarkdown(text) {
-    return text
-      .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/^### (.+)$/gm, '<strong style="font-size:13px;color:var(--accent)">$1</strong>')
-      .replace(/^## (.+)$/gm, '<strong style="font-size:14px;color:var(--accent)">$1</strong>')
-      .replace(/^- (.+)$/gm, '• $1')
-      .replace(/\n/g, '<br>');
+  let rx = 0, ry = 0, rz = 0;
+  let vx = 0.003, vy = 0.007, vz = 0.002;
+  const R = 120; // radius
+
+  function rotX(v, a) {
+    return [v[0], v[1]*Math.cos(a)-v[2]*Math.sin(a), v[1]*Math.sin(a)+v[2]*Math.cos(a)];
+  }
+  function rotY(v, a) {
+    return [v[0]*Math.cos(a)+v[2]*Math.sin(a), v[1], -v[0]*Math.sin(a)+v[2]*Math.cos(a)];
+  }
+  function rotZ(v, a) {
+    return [v[0]*Math.cos(a)-v[1]*Math.sin(a), v[0]*Math.sin(a)+v[1]*Math.cos(a), v[2]];
+  }
+  function project(v) {
+    const fov = 4;
+    const z = v[2] + fov;
+    return [W/2 + v[0]*R*fov/z, H/2 + v[1]*R*fov/z, v[2]];
   }
 
-  // ── Append message ──────────────────────────────────────────────────────────
-  function appendMessage(role, content) {
-    const empty = document.getElementById("empty-state");
-    if (empty) empty.remove();
+  // Outer orbit dots
+  const orbitDots = Array.from({length: 8}, (_, i) => ({
+    angle: (i / 8) * Math.PI * 2,
+    radius: 148 + Math.sin(i*1.3)*8,
+    speed: 0.004 + i*0.0003,
+    size: 1.5 + (i%3)*0.5,
+  }));
 
-    const msgs = document.getElementById("messages");
-    const div  = document.createElement("div");
-    div.className = `msg ${role}`;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
 
-    const label = document.createElement("div");
-    label.className = "msg-label";
-    label.textContent = role === "user" ? "You" : CAND_NAME + " · AI";
+    // Outer glow ring
+    ctx.beginPath();
+    ctx.arc(W/2, H/2, 148, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(232,200,74,0.07)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.innerHTML  = role === "bot" ? renderMarkdown(content) : escapeHtml(content);
+    ctx.beginPath();
+    ctx.arc(W/2, H/2, 138, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(232,200,74,0.04)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
-    div.appendChild(label);
-    div.appendChild(bubble);
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-    return bubble;
+    // Orbit dots
+    orbitDots.forEach(d => {
+      const x = W/2 + Math.cos(d.angle) * d.radius;
+      const y = H/2 + Math.sin(d.angle) * d.radius;
+      ctx.beginPath();
+      ctx.arc(x, y, d.size, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(232,200,74,0.5)';
+      ctx.fill();
+      d.angle += d.speed;
+    });
+
+    // Rotate all vertices
+    const rotated = vertices.map(v => {
+      let r = rotX(v, rx);
+      r = rotY(r, ry);
+      r = rotZ(r, rz);
+      return r;
+    });
+
+    const projected = rotated.map(project);
+
+    // Draw faces (filled, very dim)
+    faces.forEach(f => {
+      const [a, b, c] = f.map(i => projected[i]);
+      // Backface cull — compute normal z
+      const nx = (b[0]-a[0])*(c[1]-a[1]) - (b[1]-a[1])*(c[0]-a[0]);
+      ctx.beginPath();
+      ctx.moveTo(a[0], a[1]);
+      ctx.lineTo(b[0], b[1]);
+      ctx.lineTo(c[0], c[1]);
+      ctx.closePath();
+      ctx.fillStyle = nx > 0 ? 'rgba(232,200,74,0.04)' : 'rgba(232,200,74,0.01)';
+      ctx.fill();
+    });
+
+    // Draw edges
+    edges.forEach(([i, j]) => {
+      const a = projected[i], b = projected[j];
+      const avgZ = (rotated[i][2] + rotated[j][2]) / 2;
+      const alpha = 0.15 + (avgZ + 1) * 0.3;
+      ctx.beginPath();
+      ctx.moveTo(a[0], a[1]);
+      ctx.lineTo(b[0], b[1]);
+      ctx.strokeStyle = `rgba(232,200,74,${Math.min(alpha, 0.75)})`;
+      ctx.lineWidth = avgZ > 0.3 ? 1.2 : 0.6;
+      ctx.stroke();
+    });
+
+    // Draw vertices
+    projected.forEach((p, i) => {
+      const z = rotated[i][2];
+      const size = z > 0.3 ? 2.5 : 1.5;
+      const alpha = 0.3 + (z + 1) * 0.35;
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], size, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(232,200,74,${Math.min(alpha, 1)})`;
+      ctx.fill();
+    });
+
+    // Slight drift in rotation speed
+    vx += (Math.random()-0.5)*0.00005;
+    vy += (Math.random()-0.5)*0.00005;
+    vz += (Math.random()-0.5)*0.00003;
+    vx = Math.max(-0.008, Math.min(0.008, vx));
+    vy = Math.max(-0.012, Math.min(0.012, vy));
+    vz = Math.max(-0.005, Math.min(0.005, vz));
+
+    rx += vx; ry += vy; rz += vz;
+    requestAnimationFrame(draw);
   }
 
-  function escapeHtml(t) {
-    return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  draw();
+})();
+
+// ── Chat logic ────────────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("persona-name").textContent = CAND_NAME;
+  if (PHONE_NUM) {
+    document.getElementById("phone-display").textContent = PHONE_NUM;
+    document.getElementById("phone-badge").style.display = "flex";
   }
-
-  // ── Typing indicator ────────────────────────────────────────────────────────
-  function showTyping() {
-    const empty = document.getElementById("empty-state");
-    if (empty) empty.remove();
-
-    const msgs = document.getElementById("messages");
-    const div  = document.createElement("div");
-    div.id = "typing-indicator";
-    div.className = "msg bot";
-
-    const label = document.createElement("div");
-    label.className = "msg-label";
-    label.textContent = CAND_NAME + " · AI";
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.innerHTML  = `<div class="typing-dots"><span></span><span></span><span></span></div>`;
-
-    div.appendChild(label);
-    div.appendChild(bubble);
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  function hideTyping() {
-    document.getElementById("typing-indicator")?.remove();
-  }
-
-  // ── Send message ────────────────────────────────────────────────────────────
-  async function sendMessage() {
-    const ta  = document.getElementById("user-input");
-    const msg = ta.value.trim();
-    if (!msg || isWaiting) return;
-
-    ta.value = "";
+  const ta = document.getElementById("user-input");
+  ta.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  ta.addEventListener("input", () => {
     ta.style.height = "auto";
+    ta.style.height = Math.min(ta.scrollHeight, 130) + "px";
+  });
+});
 
-    isWaiting = true;
-    document.getElementById("send-btn").disabled = true;
+function renderMarkdown(text) {
+  return text
+    .replace(/```[\s\S]*?```/g, m => `<pre style="background:var(--bg2);border:1px solid var(--border2);padding:10px;margin:8px 0;font-family:var(--mono);font-size:12px;overflow-x:auto">${m.replace(/```\w*\n?/g,'')}</pre>`)
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^### (.+)$/gm,'<div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);margin:12px 0 4px">$1</div>')
+    .replace(/^- (.+)$/gm,'<div style="padding-left:12px;margin:2px 0">· $1</div>')
+    .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
 
-    appendMessage("user", msg);
-    showTyping();
+function appendMessage(role, content) {
+  document.getElementById("empty-state")?.remove();
+  const msgs = document.getElementById("messages");
+  const div  = document.createElement("div");
+  div.className = `msg ${role}`;
+  const label = document.createElement("div");
+  label.className = "msg-label";
+  label.textContent = role === "user" ? "You" : CAND_NAME + " · AI";
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.innerHTML = role === "bot" ? renderMarkdown(content) : escHtml(content);
+  div.appendChild(label);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
 
-    try {
-      const resp = await fetch(`${API_BASE}/chat/message`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message:    msg,
-          session_id: sessionId,
-          stream:     false,
-        }),
-      });
+function escHtml(t) {
+  return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+function showTyping() {
+  document.getElementById("empty-state")?.remove();
+  const msgs = document.getElementById("messages");
+  const div  = document.createElement("div");
+  div.id = "typing-indicator";
+  div.className = "msg bot";
+  const label = document.createElement("div");
+  label.className = "msg-label";
+  label.textContent = CAND_NAME + " · AI";
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.innerHTML = '<div class="typing-wrap"><span></span><span></span><span></span></div>';
+  div.appendChild(label);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
 
-      const data = await resp.json();
-      sessionId  = data.session_id;
+function hideTyping() { document.getElementById("typing-indicator")?.remove(); }
 
-      hideTyping();
-      appendMessage("bot", data.answer);
-
-    } catch (err) {
-      hideTyping();
-      appendMessage("bot", "⚠️ Connection error. Is the server running? Check the API_BASE config.");
-      console.error(err);
-    } finally {
-      isWaiting = false;
-      document.getElementById("send-btn").disabled = false;
-      ta.focus();
-    }
+async function sendMessage() {
+  const ta  = document.getElementById("user-input");
+  const msg = ta.value.trim();
+  if (!msg || isWaiting) return;
+  ta.value = ""; ta.style.height = "auto";
+  isWaiting = true;
+  document.getElementById("send-btn").disabled = true;
+  appendMessage("user", msg);
+  showTyping();
+  try {
+    const resp = await fetch(`${API_BASE}/chat/message`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg, session_id: sessionId, stream: false }),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    sessionId  = data.session_id;
+    hideTyping();
+    appendMessage("bot", data.answer);
+  } catch (err) {
+    hideTyping();
+    appendMessage("bot", "Connection error — is the server running?");
+  } finally {
+    isWaiting = false;
+    document.getElementById("send-btn").disabled = false;
+    document.getElementById("user-input").focus();
   }
+}
 
-  function sendQuick(text) {
-    const ta = document.getElementById("user-input");
-    ta.value = text;
-    sendMessage();
-  }
+function sendQuick(text) {
+  document.getElementById("user-input").value = text;
+  sendMessage();
+}
 </script>
 </body>
 </html>
