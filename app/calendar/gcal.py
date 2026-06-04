@@ -231,7 +231,7 @@ def book_meeting(
             .get("uri", "")
         )
 
-        logger.info(f"Meeting booked: {created['id']} — {slot.display}")
+        logger.info(f"Meeting booked: {created['id']} — {slot._display()}")
 
         return {
             "success":        True,
