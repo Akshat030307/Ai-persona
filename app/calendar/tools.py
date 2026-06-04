@@ -152,8 +152,9 @@ class BookMeetingTool(BaseTool):
             return json.dumps({
                 "success":      True,
                 "message":      (
-                    f"Done! Meeting booked for {result['slot_display']}. "
-                    f"Calendar invite sent to {cleaned_email}."
+                    f"Confirmed! Meeting booked for {result['slot_display']} ({start.strftime('%A')}). "
+                    f"Calendar invite sent to {cleaned_email}. "
+                    f"Always state the exact day name from the slot_display field when confirming."
                 ),
                 "meet_link":    result.get("meet_link", ""),
                 "slot_display": result["slot_display"],

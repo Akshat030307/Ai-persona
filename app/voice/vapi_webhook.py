@@ -92,7 +92,7 @@ def _build_agent(rag_context: str, chat_history: list) -> AgentExecutor:
         model="gpt-4o",
         temperature=0.2,
         streaming=False,
-        max_tokens=120,
+        max_tokens=180,
     )
 
     agent = create_openai_tools_agent(llm, CALENDAR_TOOLS, prompt)
