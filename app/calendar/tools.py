@@ -89,7 +89,14 @@ class CheckAvailabilityTool(BaseTool):
     args_schema: Type[BaseModel] = CheckAvailabilityInput
 
     def _run(self, days_ahead: int = 7) -> str:
-        slots = get_available_slots(days_ahead=days_ahead, max_slots=5)
+        try:
+            slots = get_available_slots(days_ahead=days_ahead, max_slots=5)
+        except Exception as e:
+            logger.error(f"check_availability failed: {e}", exc_info=True)
+            return json.dumps({
+                "available_slots": [],
+                "message": "I'm unable to reach the calendar right now — please suggest they reach out directly instead.",
+            })
         if not slots:
             return json.dumps({
                 "available_slots": [],
@@ -139,13 +146,20 @@ class BookMeetingTool(BaseTool):
         except ValueError as e:
             return json.dumps({"success": False, "message": f"Invalid time format: {e}"})
 
-        slot   = TimeSlot(start=start, end=start + timedelta(minutes=SLOT_DURATION_MIN))
-        result = book_meeting(
-            slot=slot,
-            recruiter_name=recruiter_name.strip(),
-            recruiter_email=cleaned_email,
-            meeting_title=meeting_title,
-        )
+        slot = TimeSlot(start=start, end=start + timedelta(minutes=SLOT_DURATION_MIN))
+        try:
+            result = book_meeting(
+                slot=slot,
+                recruiter_name=recruiter_name.strip(),
+                recruiter_email=cleaned_email,
+                meeting_title=meeting_title,
+            )
+        except Exception as e:
+            logger.error(f"book_meeting failed: {e}", exc_info=True)
+            return json.dumps({
+                "success": False,
+                "message": "I'm unable to reach the calendar right now — please suggest they reach out directly instead.",
+            })
 
         if result["success"]:
             logger.info(f"Meeting booked for {recruiter_name} at {result['slot_display']}")

@@ -24,6 +24,8 @@ from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
+from app.rag.projects_loader import load_projects
+
 load_dotenv()
 logger = logging.getLogger(__name__)
 
@@ -202,6 +204,7 @@ def run_ingestion():
     docs = []
     docs += load_resume()
     docs += load_github_repos()
+    docs += load_projects()
 
     if not docs:
         logger.error("No documents loaded. Check RESUME_PATH and GITHUB_TOKEN.")

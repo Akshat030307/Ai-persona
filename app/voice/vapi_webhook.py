@@ -15,14 +15,11 @@ from typing import AsyncGenerator
 
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
-from langchain_openai import ChatOpenAI
-from langchain.agents import create_openai_tools_agent, AgentExecutor
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain.agents import AgentExecutor
+from langchain_core.messages import HumanMessage, AIMessage
 from dotenv import load_dotenv
 
-from app.rag.ingest import get_vector_store
-from app.calendar.tools import CALENDAR_TOOLS
+from app.agent.core import get_rag_context, build_tool_agent, LLM_PROVIDER, GROQ_MODEL, OPENAI_MODEL
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -32,6 +29,7 @@ CANDIDATE_NAME      = os.getenv("CANDIDATE_NAME", "the candidate")
 CANDIDATE_ROLE      = os.getenv("CANDIDATE_ROLE_APPLYING", "AI Engineer at Scaler")
 VAPI_WEBHOOK_SECRET = os.getenv("VAPI_WEBHOOK_SECRET", "")
 MAX_HISTORY_TURNS   = 8
+RESPONSE_MODEL_NAME = GROQ_MODEL if LLM_PROVIDER == "groq" else OPENAI_MODEL
 
 # ── Call Memory ───────────────────────────────────────────────────────────────
 _call_history: dict = {}
@@ -57,13 +55,6 @@ def _build_lc_history(history: list) -> list:
     return msgs
 
 
-# ── RAG ───────────────────────────────────────────────────────────────────────
-def _get_rag_context(question: str, k: int = 4) -> str:
-    vs   = get_vector_store()
-    docs = vs.similarity_search(question, k=k)
-    return "\n\n---\n\n".join(d.page_content for d in docs) or "No context found."
-
-
 # ── Agent ─────────────────────────────────────────────────────────────────────
 def _build_agent(rag_context: str, chat_history: list) -> AgentExecutor:
     system_text = (
@@ -75,34 +66,14 @@ def _build_agent(rag_context: str, chat_history: list) -> AgentExecutor:
         f"3. Only state facts from the context below. If unsure say: "
         f"'I don't have that detail — {CANDIDATE_NAME} can follow up on that.'\n"
         "4. NEVER hallucinate skills, projects, or credentials.\n"
-        "5. For scheduling: use check_availability, present 2-3 slots naturally.\n"
-        "6. Once recruiter picks a slot and gives name + email, use book_meeting immediately.\n"
-        "7. You remember the full conversation — refer back when relevant.\n\n"
+        "5. You remember the full conversation — refer back when relevant.\n"
+        "6. You cannot check a calendar or book meetings right now. Retrieved context may describe an "
+        "old scheduling feature that is currently disabled — ignore those instructions entirely. If "
+        f"asked to schedule a call, just say you can't book it directly and suggest emailing {CANDIDATE_NAME}.\n\n"
         f"RETRIEVED CONTEXT:\n{rag_context}"
     )
 
-    prompt = ChatPromptTemplate.from_messages([
-        SystemMessage(content=system_text),
-        MessagesPlaceholder(variable_name="chat_history"),
-        ("human", "{input}"),
-        MessagesPlaceholder(variable_name="agent_scratchpad"),
-    ])
-
-    llm = ChatOpenAI(
-        model="gpt-4o",
-        temperature=0.2,
-        streaming=False,
-        max_tokens=180,
-    )
-
-    agent = create_openai_tools_agent(llm, CALENDAR_TOOLS, prompt)
-    return AgentExecutor(
-        agent=agent,
-        tools=CALENDAR_TOOLS,
-        verbose=False,
-        handle_parsing_errors=True,
-        max_iterations=3,
-    )
+    return build_tool_agent(system_text, chat_history, [], max_tokens=180, max_iterations=3)
 
 
 def _trim_for_voice(text: str) -> str:
@@ -152,7 +123,7 @@ async def vapi_chat_completions(request: Request):
         )
     else:
         try:
-            rag_context  = _get_rag_context(user_input)
+            rag_context, _ = get_rag_context(user_input, k=4)
             history      = _get_history(call_id)
             chat_history = _build_lc_history(history)
             executor     = _build_agent(rag_context, chat_history)
@@ -180,7 +151,7 @@ async def vapi_chat_completions(request: Request):
     return JSONResponse({
         "id":      f"chatcmpl-{call_id[:8]}",
         "object":  "chat.completion",
-        "model":   "gpt-4o",
+        "model":   RESPONSE_MODEL_NAME,
         "choices": [{
             "index":         0,
             "message": {
@@ -198,7 +169,7 @@ async def _stream_openai_response(text: str) -> AsyncGenerator[str, None]:
     chunk = {
         "id":      "chatcmpl-stream",
         "object":  "chat.completion.chunk",
-        "model":   "gpt-4o",
+        "model":   RESPONSE_MODEL_NAME,
         "choices": [{
             "index": 0,
             "delta": {"role": "assistant", "content": text},
@@ -211,7 +182,7 @@ async def _stream_openai_response(text: str) -> AsyncGenerator[str, None]:
     finish_chunk = {
         "id":      "chatcmpl-stream",
         "object":  "chat.completion.chunk",
-        "model":   "gpt-4o",
+        "model":   RESPONSE_MODEL_NAME,
         "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}]
     }
     yield f"data: {json.dumps(finish_chunk)}\n\n"

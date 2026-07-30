@@ -46,8 +46,8 @@ async def lifespan(app: FastAPI):
     """Warm up the vector store on startup so first request isn't slow."""
     logger.info("Starting AI Persona server...")
     try:
-        from app.rag.ingest import get_vector_store
-        vs    = get_vector_store()
+        from app.agent.core import get_cached_vector_store
+        vs    = get_cached_vector_store()
         count = vs._collection.count()
         logger.info(f"Vector store loaded — {count} chunks indexed")
     except Exception as e:
@@ -62,7 +62,7 @@ app = FastAPI(
     description=(
         "AI persona system for candidate screening. "
         "Handles voice calls (via Vapi webhook) and chat sessions, "
-        "with RAG-grounded Q&A and real Google Calendar booking."
+        "with RAG-grounded Q&A."
     ),
     version="1.0.0",
     lifespan=lifespan,
@@ -77,11 +77,13 @@ app.add_middleware(
 )
 
 # ── Routers ───────────────────────────────────────────────────────────────────
-from app.voice.vapi_webhook import router as voice_router
-from app.chat.router        import router as chat_router
+from app.voice.vapi_webhook   import router as voice_router
+from app.chat.router          import router as chat_router
+from app.portfolio.router     import router as portfolio_router
 
 app.include_router(voice_router)
 app.include_router(chat_router)
+app.include_router(portfolio_router)
 
 
 # ── Frontend — serve index.html with env vars injected ───────────────────────
@@ -114,15 +116,22 @@ async def serve_frontend():
 # ── Health ────────────────────────────────────────────────────────────────────
 @app.get("/health")
 async def health():
-    return {"status": "ok", "version": "1.0.0"}
+    chunks_indexed = None
+    try:
+        from app.agent.core import get_cached_vector_store
+        chunks_indexed = get_cached_vector_store()._collection.count()
+    except Exception:
+        pass
+    return {"status": "ok", "version": "1.0.0", "chunks_indexed": chunks_indexed}
 
 
 @app.get("/api")
 async def api_info():
     return {
         "candidate":  CANDIDATE_NAME,
-        "voice":      "/voice/webhook  (POST — Vapi webhook)",
-        "chat":       "/chat/message   (POST — chat API)",
-        "docs":       "/docs           (Swagger UI)",
-        "frontend":   "/               (Chat UI)",
+        "voice":      "/voice/webhook          (POST — Vapi webhook)",
+        "chat":       "/chat/message           (POST — chat API)",
+        "projects":   "/portfolio/projects     (GET — project cards)",
+        "docs":       "/docs                   (Swagger UI)",
+        "frontend":   "/                       (Portfolio UI)",
     }
