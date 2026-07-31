@@ -102,7 +102,7 @@
     }
     .section-title {
       font-family: var(--display);
-      font-size: clamp(36px, 5vw, 56px);
+      font-size: clamp(40px, 5.5vw, 64px);
       letter-spacing: 0.03em; line-height: 0.95;
       color: var(--text); margin-bottom: 28px;
     }
@@ -114,9 +114,9 @@
     }
     .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag-chip {
-      font-family: var(--mono); font-size: 9px;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--muted); border: 1px solid var(--border2); padding: 4px 10px;
+      font-family: var(--mono); font-size: 10.5px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--border2); padding: 5px 12px;
     }
 
     /* ── Hero ── */
@@ -126,7 +126,7 @@
     }
     .hero-title {
       font-family: var(--display);
-      font-size: clamp(56px, 9vw, 104px);
+      font-size: clamp(60px, 9.5vw, 116px);
       letter-spacing: 0.03em; line-height: 0.92;
       color: var(--text); margin-bottom: 22px;
       overflow: hidden;
@@ -134,8 +134,8 @@
     .hero-title em { color: var(--yellow); font-style: normal; }
     .hero-title .letter { display: inline-block; will-change: transform, opacity; }
     .hero-tagline {
-      font-family: var(--sans); font-weight: 300; font-size: 16px;
-      color: var(--muted); max-width: 480px; margin-bottom: 28px; line-height: 1.6;
+      font-family: var(--sans); font-weight: 300; font-size: 18px;
+      color: var(--muted); max-width: 640px; margin-bottom: 28px; line-height: 1.6;
     }
     .hero-cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
     .cta-btn {
@@ -156,28 +156,37 @@
       border-top: 1px solid var(--border);
     }
     .stat-item {
-      flex: 0 0 auto; min-width: 160px;
-      padding: 28px 56px 0 0;
+      flex: 1; min-width: 180px;
+      padding: 28px 32px 0 0;
       border-right: 1px solid var(--border);
     }
     .stat-item:last-child { border-right: none; }
     .stat-number {
-      font-family: var(--display); font-size: clamp(32px, 4vw, 48px);
+      font-family: var(--display); font-size: clamp(36px, 4.5vw, 56px);
       color: var(--yellow); line-height: 1;
     }
     .stat-label {
-      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--muted); margin-top: 8px;
     }
 
     /* ── Projects ── */
     #projects-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      display: flex; flex-wrap: wrap;
       gap: 20px;
     }
     .project-card {
+      flex: 1 1 320px;
       border: 1px solid var(--border2); background: rgba(26,24,16,0.5);
       display: flex; flex-direction: column;
+    }
+    .project-card, .about-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .project-card:hover, .about-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--yellow);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,200,74,0.15);
     }
     .project-media {
       aspect-ratio: 16 / 9; background: var(--bg2);
@@ -196,13 +205,13 @@
       padding: 10px 18px; cursor: pointer; transition: all 0.15s;
     }
     .play-btn:hover { border-color: var(--yellow); background: rgba(232,200,74,0.15); }
-    .project-body { padding: 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .project-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
     .project-title {
-      font-family: var(--display); font-size: 22px; letter-spacing: 0.02em; color: var(--text);
+      font-family: var(--display); font-size: 25px; letter-spacing: 0.02em; color: var(--text);
     }
-    .project-summary { font-size: 13px; font-weight: 300; line-height: 1.6; color: var(--muted); }
+    .project-summary { font-size: 14.5px; font-weight: 300; line-height: 1.6; color: var(--muted); }
     .project-stack {
-      font-family: var(--mono); font-size: 10px; color: var(--yellow2); opacity: 0.8;
+      font-family: var(--mono); font-size: 11px; color: var(--yellow2); opacity: 0.8;
     }
     .project-actions {
       margin-top: auto; padding-top: 8px; display: flex; align-items: center;
@@ -225,17 +234,54 @@
 
     /* ── About ── */
     .about-bio {
-      font-size: 15px; font-weight: 300; line-height: 1.8; color: var(--text);
-      max-width: 640px; margin-bottom: 32px;
+      font-size: 17px; font-weight: 300; line-height: 1.8; color: var(--text);
+      max-width: 820px; margin-bottom: 32px;
     }
+    .about-links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+    .about-link-badge {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 14px; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--yellow2); text-decoration: none;
+      border: 1px solid var(--yellow); padding: 9px 16px;
+      transition: all 0.15s;
+    }
+    .about-link-badge:hover { background: rgba(232,200,74,0.12); color: var(--yellow2); }
+    .badge-sub {
+      color: var(--muted); font-size: 11px; text-transform: none; letter-spacing: 0.02em;
+    }
+    .about-subsection { margin-bottom: 36px; }
+    .about-card-grid {
+      display: flex; flex-wrap: wrap;
+      gap: 16px;
+    }
+    .about-card {
+      flex: 1 1 300px;
+      border: 1px solid var(--border2); background: rgba(26,24,16,0.5);
+      padding: 20px; display: flex; flex-direction: column; gap: 9px;
+    }
+    .about-card-title {
+      font-family: var(--display); font-size: 23px; letter-spacing: 0.02em; color: var(--text);
+    }
+    .about-card-meta {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+      color: var(--yellow2); opacity: 0.85;
+    }
+    .about-card-desc { font-size: 14.5px; font-weight: 300; line-height: 1.6; color: var(--muted); }
+    .cert-chip {
+      font-family: var(--mono); font-size: 12.5px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--yellow2); border: 1px solid var(--yellow); padding: 6px 14px;
+      text-decoration: none; transition: all 0.15s;
+    }
+    .cert-chip:hover { background: rgba(232,200,74,0.12); color: var(--yellow2); }
     .skills-label {
-      font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
       text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
     }
     .skill-group { margin-bottom: 18px; }
     .skill-group:last-child { margin-bottom: 0; }
     .skill-group-label {
-      font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--yellow); opacity: 0.7; margin-bottom: 8px;
     }
 
@@ -300,7 +346,7 @@
       letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
     }
     .msg.user .msg-label { color: var(--yellow); opacity: 0.7; }
-    .bubble { padding: 12px 16px; font-size: 13.5px; line-height: 1.7; font-weight: 300; }
+    .bubble { padding: 12px 16px; font-size: 14.5px; line-height: 1.7; font-weight: 300; }
     .msg.user .bubble {
       background: var(--yellow); color: var(--bg); font-weight: 400;
       clip-path: polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%);
@@ -358,10 +404,10 @@
     }
     textarea {
       flex:1;background:transparent;border:none;color:var(--text);
-      font-family:var(--sans);font-size:13.5px;font-weight:300;
+      font-family:var(--sans);font-size:14.5px;font-weight:300;
       padding:11px 14px;resize:none;min-height:42px;max-height:130px;outline:none;line-height:1.6;
     }
-    textarea::placeholder{color:var(--muted);font-size:12px;letter-spacing:.04em}
+    textarea::placeholder{color:var(--muted);font-size:13px;letter-spacing:.04em}
     #send-btn {
       width:42px;height:42px;background:var(--yellow);border:none;cursor:pointer;
       display:flex;align-items:center;justify-content:center;flex-shrink:0;
@@ -428,8 +474,20 @@
     <div class="stat-label">Tech Stack</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number" id="stat-chunks" data-target="0">0</div>
-    <div class="stat-label">RAG Chunks Indexed</div>
+    <div class="stat-number" data-target="24">0</div>
+    <div class="stat-label">GitHub Repositories</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" data-target="8.35" data-decimals="2">0</div>
+    <div class="stat-label">CGPA (2nd Year)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" data-target="2">0</div>
+    <div class="stat-label">Hackathon Wins</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number" data-target="4">0</div>
+    <div class="stat-label">Hackathon Finals</div>
   </div>
 </div>
 
@@ -451,6 +509,46 @@
     solutions. Interested in advancing Generative AI through robust deployment, MLOps, and applied
     NLP.
   </p>
+
+  <div class="about-links">
+    <a class="about-link-badge" href="https://leetcode.com/u/akshatchowdhary03/" target="_blank" rel="noopener">
+      LeetCode <span class="badge-sub">150+ Qs across LC &amp; GFG</span>
+    </a>
+    <a class="about-link-badge" href="https://github.com/Akshat030307" target="_blank" rel="noopener">GitHub</a>
+  </div>
+
+  <div class="about-subsection">
+    <div class="skills-label">Experience</div>
+    <div class="about-card-grid">
+      <div class="about-card">
+        <div class="about-card-title">RL Content Developer</div>
+        <div class="about-card-meta">PyVision Technologies (Client: Turing) · Sept 2025 – Dec 2025</div>
+        <div class="about-card-desc">
+          Designed modular notebook components — task definitions, graded reward schemas, and
+          step-wise system prompts — standardizing the LLM evaluation framework across the team.
+        </div>
+        <div class="project-stack">Google Colab · BQML</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-title">Freelance Web Developer</div>
+        <div class="about-card-meta">2 startup clients</div>
+        <div class="about-card-desc">
+          Built landing pages and full web apps with SEO for two startups, generating real user
+          traffic.
+        </div>
+        <a class="proj-link" href="https://theyoungdispatchmagazine.com/" target="_blank" rel="noopener">View site — The Young Dispatch →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-subsection">
+    <div class="skills-label">Certifications</div>
+    <div class="tag-row">
+      <a class="cert-chip" href="https://www.udemy.com/certificate/UC-882b4530-7fd9-45e3-b8f5-3240b0b27583" target="_blank" rel="noopener">Udemy Certificate →</a>
+      <a class="cert-chip" href="https://www.coursera.org/account/accomplishments/verify/8G2ABUK1EP6C?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noopener">Coursera Certificate →</a>
+    </div>
+  </div>
+
   <div class="skills-label">Tech I work with</div>
 
   <div class="skill-group">
@@ -695,10 +793,23 @@ async function loadProjects() {
     const projects = await resp.json();
     if (!projects.length) { empty.style.display = 'block'; return; }
     projects.forEach(p => grid.appendChild(renderProjectCard(p)));
+    revealCards(grid);
   } catch (err) {
     empty.textContent = 'Could not load projects — is the server running?';
     empty.style.display = 'block';
   }
+}
+
+function revealCards(container) {
+  if (typeof gsap === 'undefined' || !container) return;
+  gsap.registerPlugin(ScrollTrigger);
+  const cards = container.querySelectorAll('.project-card, .about-card');
+  if (!cards.length) return;
+  gsap.set(cards, { y: 24, opacity: 0 });
+  ScrollTrigger.create({
+    trigger: container, start: 'top 85%', once: true,
+    onEnter: () => gsap.to(cards, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', stagger: 0.08, clearProps: 'transform' }),
+  });
 }
 
 function renderProjectCard(p) {
@@ -794,10 +905,13 @@ function initAnimations() {
 
   // 4. Stat strip — real, dynamically-sourced numbers with animated counters
   initStatStrip();
+
+  // 5. About experience cards fade in on scroll, same treatment as project cards
+  revealCards(document.querySelector('.about-card-grid'));
 }
 
 async function initStatStrip() {
-  const stackCount = document.querySelectorAll('#about .tag-row .tag-chip').length;
+  const stackCount = document.querySelectorAll('#about .skill-group .tag-row .tag-chip').length;
   document.getElementById('stat-stack').dataset.target = stackCount;
 
   try {
@@ -806,20 +920,15 @@ async function initStatStrip() {
     document.getElementById('stat-projects').dataset.target = projects.length;
   } catch (err) { /* stays at 0 */ }
 
-  try {
-    const healthRes = await fetch(`${API_BASE}/health`);
-    const health    = await healthRes.json();
-    document.getElementById('stat-chunks').dataset.target = health.chunks_indexed || 0;
-  } catch (err) { /* stays at 0 */ }
-
   document.querySelectorAll('.stat-number').forEach(el => {
-    const target  = parseInt(el.dataset.target, 10) || 0;
-    const counter = { value: 0 };
+    const target   = parseFloat(el.dataset.target) || 0;
+    const decimals = parseInt(el.dataset.decimals, 10) || 0;
+    const counter  = { value: 0 };
     ScrollTrigger.create({
       trigger: '#stat-strip', start: 'top 85%', once: true,
       onEnter: () => gsap.to(counter, {
         value: target, duration: 1.4, ease: 'power2.out',
-        onUpdate: () => { el.textContent = Math.round(counter.value); },
+        onUpdate: () => { el.textContent = counter.value.toFixed(decimals); },
       }),
     });
   });
