@@ -12,7 +12,7 @@ langchain-openai==0.1.23
 langchain-groq==0.1.10
 langchain-chroma==0.1.4
 langchain-text-splitters==0.2.4
-langchain-core==0.2.38
+langchain-core==0.2.43
 langsmith==0.1.125
 chromadb==0.5.13
 groq==0.11.0
