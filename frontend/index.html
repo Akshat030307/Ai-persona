@@ -122,11 +122,8 @@
     /* ── Hero ── */
     #home {
       min-height: calc(100dvh - 52px);
-      display: flex; flex-direction: row; flex-wrap: wrap;
-      align-items: center; justify-content: space-between;
-      gap: 32px;
+      display: flex; flex-direction: column; justify-content: center;
     }
-    .hero-left { flex: 1 1 420px; min-width: 0; }
     .hero-title {
       font-family: var(--display);
       font-size: clamp(60px, 9.5vw, 116px);
@@ -284,21 +281,14 @@
       text-transform: uppercase; color: var(--yellow); opacity: 0.7; margin-bottom: 8px;
     }
     .hero-music {
-      flex: 0 0 auto;
-      width: 580px; max-width: 100%;
-      display: flex; flex-direction: column; gap: 14px;
-    }
-    .hero-music-heading {
-      font-family: var(--display); font-size: 28px; letter-spacing: 0.02em;
-      color: var(--text);
-    }
-    .hero-music-heading em { color: var(--yellow); font-style: normal; }
-    .hero-music-grid {
+      position: absolute; top: 50%; right: 460px;
+      transform: translateY(-50%);
+      width: 580px;
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
-    .hero-music-grid iframe { display: block; width: 100%; height: 152px; border: none; border-radius: 8px; }
-    @media (max-width: 1150px) {
+    .hero-music iframe { display: block; width: 100%; height: 152px; border: none; border-radius: 8px; }
+    @media (max-width: 1500px) {
       .hero-music { display: none; }
     }
 
@@ -461,7 +451,6 @@
 
 <!-- ── Hero ── -->
 <section id="home">
-  <div class="hero-left">
   <div class="section-index">01 / AI ENGINEER</div>
   <h1 class="hero-title">AKSHAT<br><em>CHOWDHARY</em></h1>
   <div class="hero-tagline">
@@ -479,15 +468,11 @@
     <span class="tag-chip">RAG</span>
     <span class="tag-chip">LLM Evals</span>
   </div>
-  </div>
   <div class="hero-music">
-    <div class="hero-music-heading">ON <em>REPEAT</em></div>
-    <div class="hero-music-grid">
     <iframe src="https://open.spotify.com/embed/track/4U45aEWtQhrm8A5mxPaFZ7?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     <iframe src="https://open.spotify.com/embed/track/4gZ4j1cxxxrQd8ZYW2lrer?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     <iframe src="https://open.spotify.com/embed/track/4XII12nbsvJblXfG1I2QR4?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     <iframe src="https://open.spotify.com/embed/track/6zbiXI7GAeG23AIG7ocSdC?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
   </div>
 </section>
 
