@@ -138,6 +138,16 @@
       color: var(--muted); max-width: 640px; margin-bottom: 28px; line-height: 1.6;
     }
     .hero-cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+    .hero-music {
+      position: absolute; top: 50%; right: 28px;
+      transform: translateY(-50%);
+      width: 280px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .hero-music iframe { display: block; width: 100%; height: 152px; border: none; border-radius: 8px; }
+    @media (max-width: 1150px) {
+      .hero-music { display: none; }
+    }
     .cta-btn {
       font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
       text-transform: uppercase; padding: 12px 22px; cursor: pointer;
@@ -463,6 +473,12 @@
     <span class="tag-chip">Voice AI</span>
     <span class="tag-chip">RAG</span>
     <span class="tag-chip">LLM Evals</span>
+  </div>
+  <div class="hero-music">
+    <iframe src="https://open.spotify.com/embed/track/4U45aEWtQhrm8A5mxPaFZ7?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/38o5lj4mbLK34vQkJUlMrg?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/4XII12nbsvJblXfG1I2QR4?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/2VBz6QJFqhi497KuKvWgHl?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
   </div>
 </section>
 
