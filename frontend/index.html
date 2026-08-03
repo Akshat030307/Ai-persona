@@ -280,12 +280,17 @@
       font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--yellow); opacity: 0.7; margin-bottom: 8px;
     }
-    .music-card-grid {
-      display: flex; flex-wrap: wrap;
-      gap: 16px; margin-top: 28px;
+    .hero-music {
+      position: absolute; top: 50%; right: 460px;
+      transform: translateY(-50%);
+      width: 580px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
-    .music-card { flex: 0 1 300px; padding: 10px; }
-    .music-card iframe { display: block; width: 100%; border: none; }
+    .hero-music iframe { display: block; width: 100%; height: 152px; border: none; border-radius: 8px; }
+    @media (max-width: 1500px) {
+      .hero-music { display: none; }
+    }
 
     /* ── Ask AI dock — fixed to viewport at all times ── */
     #ask-dock {
@@ -432,7 +437,6 @@
   </div>
   <div class="nav-links">
     <a href="#home">Home</a>
-    <a href="#music">Music</a>
     <a href="#about">About</a>
     <a href="#projects">Projects</a>
     <a href="#" onclick="event.preventDefault(); openAskDock();">Ask AI</a>
@@ -464,6 +468,12 @@
     <span class="tag-chip">RAG</span>
     <span class="tag-chip">LLM Evals</span>
   </div>
+  <div class="hero-music">
+    <iframe src="https://open.spotify.com/embed/track/4U45aEWtQhrm8A5mxPaFZ7?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/4gZ4j1cxxxrQd8ZYW2lrer?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/4XII12nbsvJblXfG1I2QR4?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe src="https://open.spotify.com/embed/track/6zbiXI7GAeG23AIG7ocSdC?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
 </section>
 
 <!-- ── Stat Strip ── -->
@@ -494,22 +504,9 @@
   </div>
 </div>
 
-<!-- ── Music ── -->
-<section id="music">
-  <div class="section-index">02 / OFF DUTY</div>
-  <div class="title-wrap"><h2 class="section-title">ON <em>REPEAT</em></h2><div class="reveal-mask"></div></div>
-  <p class="about-bio">Four tracks that were on loop while building this site.</p>
-  <div class="music-card-grid">
-    <div class="about-card music-card"><iframe src="https://open.spotify.com/embed/track/4U45aEWtQhrm8A5mxPaFZ7?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-    <div class="about-card music-card"><iframe src="https://open.spotify.com/embed/track/4gZ4j1cxxxrQd8ZYW2lrer?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-    <div class="about-card music-card"><iframe src="https://open.spotify.com/embed/track/4XII12nbsvJblXfG1I2QR4?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-    <div class="about-card music-card"><iframe src="https://open.spotify.com/embed/track/6zbiXI7GAeG23AIG7ocSdC?utm_source=generator&theme=0" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
-  </div>
-</section>
-
 <!-- ── About ── -->
 <section id="about">
-  <div class="section-index">03 / ABOUT</div>
+  <div class="section-index">02 / ABOUT</div>
   <div class="title-wrap"><h2 class="section-title">WHAT I <em>DO</em></h2><div class="reveal-mask"></div></div>
   <p class="about-bio">
     AI Systems Engineer focused on building agentic AI applications, scalable backend services, and
@@ -682,7 +679,7 @@
 
 <!-- ── Projects ── -->
 <section id="projects">
-  <div class="section-index">04 / PROJECTS</div>
+  <div class="section-index">03 / PROJECTS</div>
   <div class="title-wrap"><h2 class="section-title">SELECTED <em>WORK</em></h2><div class="reveal-mask"></div></div>
   <div id="projects-grid"></div>
   <div id="projects-empty" style="display:none">No projects loaded yet.</div>
@@ -975,8 +972,6 @@ function initAnimations() {
   // 5. About experience cards fade in on scroll, same treatment as project cards
   revealCards(document.querySelector('.about-card-grid'));
 
-  // 6. Music cards, same treatment
-  revealCards(document.querySelector('.music-card-grid'));
 }
 
 async function initStatStrip() {
