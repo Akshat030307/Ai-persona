@@ -1,17 +1,22 @@
 ---
 title: ASTRA
 slug: astra
-order: 2
-tags: [Voice AI, Computer Vision, LLM]
-stack: [Python, LLaMA, Mediapipe, OpenCV]
+order: 4
+tags: [Voice AI, Offline AI, LLM]
+stack: [LLaMA-3.2, Vosk, SQLite, PyTorch]
 github_url: https://github.com/Akshat030307/ASTRA
-drive_video_url: "https://drive.google.com/file/d/1BCzhOyU-mlHkvn1yvjXhFhWmdYAFDFHp/view?usp=sharing"
-summary: A Jarvis-inspired personal AI assistant combining voice control, hand gesture recognition, and LLaMA-powered intelligence, running entirely locally.
+drive_video_url: ""
+summary: An offline, Jarvis-inspired voice assistant with dual local LLM inference, zero data egress, and real-time screen OCR.
 ---
-ASTRA is a Jarvis-inspired personal AI assistant that combines voice control, hand gesture
-recognition, and LLaMA-powered intelligence — built with Python to run entirely on the local
-machine, with no cloud dependency for its core reasoning.
+ASTRA is a Jarvis-inspired voice assistant that operates fully offline, via process-isolated dual
+LLM inference — a 3B resident model paired with an 8B lazy-loaded fallback — with SQLite handling
+state persistence.
 
-<!-- TODO: paste the Google Drive share link for the ASTRA demo video into drive_video_url above.
-     Add detail here on how the voice/gesture/LLM pieces integrate and what motivated a fully
-     local-first design. -->
+It integrates offline speech recognition (Vosk), local document search, and an intent
+classification engine that drives 35+ automated system controls. It also does real-time screen OCR
+analysis and multi-turn conversation tracking, guaranteeing complete local privacy with zero data
+egress — nothing leaves the machine.
+
+<!-- TODO: paste a Google Drive share link for the ASTRA demo video into drive_video_url above,
+     if/when one exists. Add detail on the process-isolation architecture between the two models,
+     and what motivated the fully local-first / zero-egress design. -->

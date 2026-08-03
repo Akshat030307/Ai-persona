@@ -1,7 +1,7 @@
 ---
 title: ELIRA
 slug: elira
-order: 1
+order: 3
 tags: [NLP, Legal-Tech, Microservices]
 stack: [Python, Whisper, BART, spaCy, OCR, Docker]
 github_url: https://github.com/Akshat030307/ELIRA

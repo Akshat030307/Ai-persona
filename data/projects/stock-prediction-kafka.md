@@ -1,7 +1,7 @@
 ---
 title: Stock-Prediction-Kafka
 slug: stock-prediction-kafka
-order: 3
+order: 5
 tags: [bert, fastapi, kafka, machine-learning, nlp, real-time, yfinance]
 stack: [Python, Kafka, DistilBERT, XGBoost, FastAPI, React]
 github_url: https://github.com/Akshat030307/Stock-Prediction-Kafka

@@ -1,7 +1,7 @@
 ---
 title: RAG
 slug: rag-pdf-qa
-order: 4
+order: 6
 tags: [RAG, NLP, API]
 stack: [Python, FastAPI, OpenAI Embeddings, Vector Store]
 github_url: https://github.com/Akshat030307/RAG

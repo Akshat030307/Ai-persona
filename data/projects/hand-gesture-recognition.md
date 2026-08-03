@@ -1,7 +1,7 @@
 ---
 title: Hand-Gesture-Recognition
 slug: hand-gesture-recognition
-order: 6
+order: 8
 tags: [Computer Vision]
 stack: [Python, CMake, Mediapipe, NumPy, OpenCV]
 github_url: https://github.com/Akshat030307/Hand-Gesture-Recognition-

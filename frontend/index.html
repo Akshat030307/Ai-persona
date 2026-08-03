@@ -172,7 +172,7 @@
 
     /* ── Projects ── */
     #projects-grid {
-      display: flex; flex-wrap: wrap;
+      display: flex; flex-wrap: wrap; align-items: flex-start;
       gap: 20px;
     }
     .project-card {
@@ -194,10 +194,6 @@
       border-bottom: 1px solid var(--border2); position: relative; overflow: hidden;
     }
     .project-media iframe { width: 100%; height: 100%; border: none; }
-    .media-placeholder {
-      font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--muted); opacity: 0.5;
-    }
     .play-btn {
       font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--yellow);
@@ -504,10 +500,10 @@
   <div class="section-index">03 / ABOUT</div>
   <div class="title-wrap"><h2 class="section-title">WHAT I <em>DO</em></h2><div class="reveal-mask"></div></div>
   <p class="about-bio">
-    AI Engineer specializing in the design and deployment of production-grade AI systems, with
-    experience building LLM applications, intelligent agents, and scalable machine learning
-    solutions. Interested in advancing Generative AI through robust deployment, MLOps, and applied
-    NLP.
+    AI Systems Engineer focused on building agentic AI applications, scalable backend services, and
+    LLM-powered platforms. Experienced in designing graph execution engines, offline AI assistants,
+    and real-time voice systems using FastAPI, PostgreSQL, Docker, PyTorch, and modern GenAI
+    frameworks. Passionate about building reliable AI infrastructure and intelligent products.
   </p>
 
   <div class="about-links">
@@ -518,25 +514,57 @@
   </div>
 
   <div class="about-subsection">
+    <div class="skills-label">Education</div>
+    <div class="about-card-grid">
+      <div class="about-card">
+        <div class="about-card-title">B.Tech in Computer Science</div>
+        <div class="about-card-meta">University School of Information and Communication Technology (USICT) · May 2024 – May 2028</div>
+        <div class="about-card-desc">CGPA: 8.35 / 10.0 · New Delhi, India</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-title">Senior Secondary (Class XII)</div>
+        <div class="about-card-meta">The Air Force School, Subroto Park · Mar 2024</div>
+        <div class="about-card-desc">87.8% · Class X: 95.6% · New Delhi, India</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-subsection">
     <div class="skills-label">Experience</div>
     <div class="about-card-grid">
       <div class="about-card">
-        <div class="about-card-title">RL Content Developer</div>
+        <div class="about-card-title">AI Analyst</div>
         <div class="about-card-meta">PyVision Technologies (Client: Turing) · Sept 2025 – Dec 2025</div>
         <div class="about-card-desc">
-          Designed modular notebook components — task definitions, graded reward schemas, and
-          step-wise system prompts — standardizing the LLM evaluation framework across the team.
+          Authored 10+ structured Reinforcement Learning (RL) notebooks in Google Colab to evaluate
+          LLMs via task-based learning pipelines and graded reward schemas for a US client.
+          Standardized team evaluation frameworks by modularizing system prompts, step-wise
+          outputs, and task definitions.
         </div>
         <div class="project-stack">Google Colab · BQML</div>
       </div>
       <div class="about-card">
-        <div class="about-card-title">Freelance Web Developer</div>
-        <div class="about-card-meta">2 startup clients</div>
+        <div class="about-card-title">Freelance Frontend Developer</div>
+        <div class="about-card-meta">Digital magazine client · June 2026 – Present</div>
         <div class="about-card-desc">
-          Built landing pages and full web apps with SEO for two startups, generating real user
-          traffic.
+          Engineered and deployed an interactive web application for a digital magazine client,
+          ensuring mobile responsiveness, modern UI accessibility, and fast load speeds — 200+
+          users. Translated UI/UX wireframes into modular React components and dynamic layout
+          systems for publication content.
         </div>
+        <div class="project-stack">React · Next.js · Tailwind CSS · Vite</div>
         <a class="proj-link" href="https://theyoungdispatchmagazine.com/" target="_blank" rel="noopener">View site — The Young Dispatch →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-subsection">
+    <div class="skills-label">Achievements</div>
+    <div class="about-card-grid">
+      <div class="about-card">
+        <div class="about-card-title">Smart India Hackathon (SIH)</div>
+        <div class="about-card-meta">Internal Round Winner · USICT, Dwarka · Sept 2024</div>
+        <div class="about-card-desc">Ranked 1st among 105 competing teams in the university selection round.</div>
       </div>
     </div>
   </div>
@@ -544,8 +572,8 @@
   <div class="about-subsection">
     <div class="skills-label">Certifications</div>
     <div class="tag-row">
-      <a class="cert-chip" href="https://www.udemy.com/certificate/UC-882b4530-7fd9-45e3-b8f5-3240b0b27583" target="_blank" rel="noopener">Udemy Certificate →</a>
-      <a class="cert-chip" href="https://www.coursera.org/account/accomplishments/verify/8G2ABUK1EP6C?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noopener">Coursera Certificate →</a>
+      <a class="cert-chip" href="https://www.udemy.com/certificate/UC-882b4530-7fd9-45e3-b8f5-3240b0b27583" target="_blank" rel="noopener">Agentic AI — LangGraph &amp; LangChain Bootcamp (Udemy / Krish Naik) →</a>
+      <a class="cert-chip" href="https://www.coursera.org/account/accomplishments/verify/8G2ABUK1EP6C?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noopener">Machine Learning Specialization (DeepLearning.AI / Stanford) →</a>
     </div>
   </div>
 
@@ -559,6 +587,7 @@
       <span class="tag-chip">C/C++</span>
       <span class="tag-chip">SQL</span>
       <span class="tag-chip">JavaScript</span>
+      <span class="tag-chip">TypeScript</span>
       <span class="tag-chip">HTML/CSS</span>
     </div>
   </div>
@@ -602,12 +631,25 @@
   </div>
 
   <div class="skill-group">
+    <div class="skill-group-label">Databases &amp; Storage</div>
+    <div class="tag-row">
+      <span class="tag-chip">PostgreSQL</span>
+      <span class="tag-chip">MongoDB</span>
+      <span class="tag-chip">SQLite</span>
+      <span class="tag-chip">ChromaDB</span>
+      <span class="tag-chip">Pinecone</span>
+    </div>
+  </div>
+
+  <div class="skill-group">
     <div class="skill-group-label">Backend &amp; DevOps</div>
     <div class="tag-row">
+      <span class="tag-chip">Node.js</span>
       <span class="tag-chip">FastAPI</span>
       <span class="tag-chip">Docker</span>
       <span class="tag-chip">Docker Compose</span>
       <span class="tag-chip">Git</span>
+      <span class="tag-chip">Postman</span>
       <span class="tag-chip">Google Cloud Platform</span>
       <span class="tag-chip">Groq API</span>
     </div>
@@ -616,10 +658,12 @@
   <div class="skill-group">
     <div class="skill-group-label">Frontend</div>
     <div class="tag-row">
+      <span class="tag-chip">Next.js</span>
       <span class="tag-chip">React</span>
       <span class="tag-chip">Recharts</span>
       <span class="tag-chip">Tailwind CSS</span>
       <span class="tag-chip">Vite</span>
+      <span class="tag-chip">REST APIs</span>
     </div>
   </div>
 </section>
@@ -814,7 +858,7 @@ function revealCards(container) {
 
 function renderProjectCard(p) {
   const card = document.createElement('div');
-  card.className = 'project-card';
+  card.className = p.video_embed_url ? 'project-card' : 'project-card project-card-compact';
 
   const tagsHtml  = (p.tags || []).map(t => `<span class="tag-chip">${escHtml(t)}</span>`).join('');
   const stackHtml = (p.stack || []).length
@@ -822,10 +866,12 @@ function renderProjectCard(p) {
   const githubHtml = p.github_url
     ? `<a class="proj-link" href="${p.github_url}" target="_blank" rel="noopener">View on GitHub →</a>` : '<span></span>';
 
+  const mediaHtml = p.video_embed_url
+    ? `<div class="project-media"><button class="play-btn" type="button">▶ Watch demo</button></div>`
+    : '';
+
   card.innerHTML = `
-    <div class="project-media">
-      ${p.video_embed_url ? '<button class="play-btn" type="button">▶ Watch demo</button>' : '<div class="media-placeholder">No demo video yet</div>'}
-    </div>
+    ${mediaHtml}
     <div class="project-body">
       <div class="project-title">${escHtml(p.title)}</div>
       <div class="project-summary">${escHtml(p.summary || '')}</div>

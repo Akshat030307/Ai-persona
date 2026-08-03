@@ -1,17 +1,18 @@
 ---
 title: mesh
 slug: mesh
-order: 7
+order: 1
 tags: [AI Agents, Marketplace, Full-Stack, Workflow Builder]
 stack: [Next.js, FastAPI, PostgreSQL, Docker, Caddy, E2B, OpenAI API, Razorpay]
 github_url: https://github.com/Akshat030307/mesh
 drive_video_url: "https://drive.google.com/file/d/1BCzhOyU-mlHkvn1yvjXhFhWmdYAFDFHp/view?usp=sharing"
-summary: An AI agent marketplace with a visual, n8n-style builder — developers wire and publish agents, businesses browse, run, buy, or post what they need built.
+summary: A live AI agent marketplace with a visual, n8n-style builder — developers wire and publish agents, businesses browse, run, buy, or post what they need built. 30+ organic signups.
 ---
-mesh is an AI agent marketplace with a visual builder. Developers wire agents together on an
-n8n-style node canvas (Studio) and publish them; businesses browse, run, and buy published agents,
-or post what they need built and receive proposals from developers (Requests). Three surfaces, one
-codebase: Marketplace (`/`), Studio (`/studio` → `/build/:id`), and Requests (`/requirements`).
+mesh is a live AI agent marketplace with a visual builder, running in production with 30+ organic
+signups. Developers wire agents together on an n8n-style node canvas (Studio) and publish them;
+businesses browse, run, and buy published agents, or post what they need built and receive
+proposals from developers (Requests). Three surfaces, one codebase: Marketplace (`/`), Studio
+(`/studio` → `/build/:id`), and Requests (`/requirements`).
 
 **Architecture:** Caddy terminates TLS and reverse-proxies everything to Next.js, which proxies
 `/api/*` to FastAPI through a route handler rather than a `next.config` rewrite — rewrite
