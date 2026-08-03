@@ -155,8 +155,9 @@
     }
     .hero-portrait-col { position: relative; height: 100%; min-height: 480px; z-index: 2; }
     .hero-portrait-col img {
-      position: absolute; right: -4.5vw; bottom: 0;
-      width: 40vw; max-width: 620px; height: 78%; max-height: 720px;
+      position: absolute; right: 28px; bottom: 0;
+      transform-origin: bottom right;
+      width: 49vw; max-width: 760px; height: 95%; max-height: 880px;
       object-fit: cover; object-position: 66% 10%;
       display: block;
       mask-image: radial-gradient(circle at 100% 100%, black 0%, black 40%, transparent 78%);
@@ -166,7 +167,7 @@
     @media (max-width: 1100px) {
       #home { grid-template-columns: 58% 42%; }
       .hero-left { padding-right: 16px; }
-      .hero-portrait-col img { width: 46vw; right: -3vw; bottom: -2vh; }
+      .hero-portrait-col img { width: 56vw; max-width: none; right: 18px; bottom: -2vh; }
     }
     @media (max-width: 860px) {
       #home {
